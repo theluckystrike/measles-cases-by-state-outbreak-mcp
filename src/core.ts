@@ -257,7 +257,7 @@ export async function casesUS(f: FetchText, a: { year?: number } = {}, now = new
   const prevOb = ob.data?.previous_year?.year === year ? ob.data.previous_year : null;
 
   const lines: string[] = [];
-  lines.push(`${year === latestYear ? `As of ${asOf ?? 'the latest CDC update'}, ` : 'For '}${fmt(total)} confirmed measles cases were reported in the United States in ${year}${year === latestYear ? ' so far' : ''}` +
+  lines.push(`${year === latestYear ? `As of ${asOf ?? 'the latest CDC update'}, ` : 'For '}${fmt(total)} confirmed measles cases were reported in the United States in ${year}` +
     (prevTotal !== null ? ` (${year - 1}: ${fmt(prevTotal)})` : '') + '.' +
     (higherSince ? ` That is the most since ${higherSince}.` : year > yearly[0].year ? ` That is the highest yearly count in CDC's series since ${yearly[0].year}.` : ''));
   if (ys) {
@@ -352,7 +352,7 @@ export async function casesByState(f: FetchText, a: { state?: string; year?: num
   const total = ranked.reduce((s, r) => s + (r.cases ?? 0), 0);
   const list = ranked.map((r) => ({ rank: rankOf(r.geography), geography: r.geography, cases: r.cases, cases_band: r.range, cases_by_year: r.by_year }));
   const summary = `${year} confirmed measles cases by state${year === map.years[0] ? ` as of ${asOf ?? 'the latest CDC update'}` : ''}: ${ranked.length} of ${rowsY.length} jurisdictions have cases (${fmt(total)} cases among U.S. residents). ` +
-    `Highest: ${list.slice(0, top).map((r) => `${r.geography} ${fmt(r.cases)}`).join(', ')}.` + (zero.length ? ` No cases: ${zero.join(', ')}.` : '');
+    `Highest: ${list.slice(0, top).map((r) => `${r.geography === 'New York' ? 'New York State (outside NYC)' : r.geography} ${fmt(r.cases)}`).join(', ')}.` + (zero.length ? ` No cases: ${zero.join(', ')}.` : '');
   return {
     summary, year, jurisdictions_with_cases: ranked.length, jurisdictions_total: rowsY.length, cases_total_residents: total,
     states: list, top: list.slice(0, top), no_cases: zero, data_updated: asOf, as_of: asOf ?? now.toISOString().slice(0, 10), source: SOURCE,
@@ -441,7 +441,7 @@ export async function mmrRates(f: FetchText, a: { state?: string; school_year?: 
     const summary = cur.pct === null
       ? `${geo}: CDC has no kindergarten MMR estimate for ${cur.school_year}.` + (latestKnown ? ` Latest: ${latestKnown.pct}% in ${latestKnown.school_year}.` : '')
       : `${geo}: ${cur.pct}% of kindergartners had 2 doses of MMR in ${cur.school_year}${cur.pct < 95 ? ' (below the 95% target for measles herd immunity)' : ' (meets the 95% target)'}` +
-        (rank ? `, ${ordinal(rank)} highest of ${nat.length} states and DC (state median ${med}%)` : '') + '.' +
+        (rank ? `, ${ordinal(rank)} highest of the ${nat.length} states and DC with an estimate (median ${med}%)` : '') + '.' +
         (pre && pre.pct !== null ? ` 2019-20: ${pre.pct}% (${cur.pct - pre.pct >= 0 ? '+' : ''}${Math.round((cur.pct - pre.pct) * 10) / 10} points).` : '') +
         ` Trend: ${hist.slice(0, 6).map((r) => `${r.school_year} ${r.pct ?? 'n/a'}${r.pct !== null ? '%' : ''}`).join(', ')}.`;
     return { summary, geography: geo, school_year: cur.school_year, coverage_pct: cur.pct, current: cur, rank_among_states: rank, state_median_pct: med, history: hist,
