@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.theluckystrike/measles-cases-by-state-outbreak-mcp",
+  "title": "Measles Cases by State and Outbreak MCP",
+  "description": "US measles cases by state, outbreak count, hospitalizations, weekly trend and MMR rates from CDC.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/theluckystrike/measles-cases-by-state-outbreak-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://measles-cases-by-state-outbreak-mcp.lipmichal.workers.dev/mcp"
+    }
+  ]
+}

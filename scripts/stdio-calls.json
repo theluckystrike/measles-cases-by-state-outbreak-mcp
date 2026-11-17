@@ -1,0 +1,6 @@
+[
+  ["measles_cases_us", {}],
+  ["measles_cases_by_state", {"state": "Texas"}],
+  ["measles_cases_history", {"view": "weekly"}],
+  ["mmr_vaccination_rates", {"state": "Idaho"}]
+]
